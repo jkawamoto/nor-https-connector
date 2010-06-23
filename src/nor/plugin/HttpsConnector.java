@@ -43,7 +43,11 @@ public class HttpsConnector extends Plugin{
 
 				"www.facebook.com",
 				"*google.com",
-				"twitter.com"
+				"twitter.com",
+				"www.evernote.com",
+				"www.dropbox.com",
+				"www.rememberthemilk.com",
+				"www.paypal*",
 
 		};
 
@@ -57,7 +61,7 @@ public class HttpsConnector extends Plugin{
 			regex.append("|");
 
 		}
-		regex.append(hosts[i].replace(".", "\\.").replace("*", ".*").replace("(", "(?:"));
+		regex.append(hosts[i].replace(".", "\\.").replace("*", "[^/]*").replace("(", "(?:"));
 		regex.append(")(.*)");
 
 		this.urlRegex = regex.toString();
