@@ -20,7 +20,7 @@ https プロトコルを用いて接続要求を行っても，
 
 使い方
 ---------------------------------
-ダウンロードした，HttpsConnector.jar を plugin フォルダに追加してください．
+ダウンロードした，HttpsConnectorPlugin.jar を plugin フォルダに追加してください．
 
 
 ライセンス
