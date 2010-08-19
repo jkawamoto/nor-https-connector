@@ -18,6 +18,7 @@
 
 package nor.plugin;
 
+import java.io.File;
 import java.util.regex.MatchResult;
 
 import nor.core.plugin.Plugin;
@@ -37,7 +38,8 @@ public class HttpsConnector extends Plugin{
 
 	private String urlRegex;
 
-	public void init(){
+	@Override
+	public void load(final File conf){
 
 		final String[] hosts = {
 
