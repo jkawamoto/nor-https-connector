@@ -18,7 +18,15 @@
 
 package nor.plugin;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.MatchResult;
 
 import nor.core.plugin.Plugin;
@@ -39,31 +47,68 @@ public class HttpsConnector extends Plugin{
 	private String urlRegex;
 
 	@Override
-	public void load(final File conf){
+	public void init(final File conf){
 
-		final String[] hosts = {
+		final List<String> hosts = new ArrayList<String>();
+		if(conf.exists()){
 
-				"www.facebook.com",
-				"*google.com",
-				"twitter.com",
-				"www.evernote.com",
-				"www.dropbox.com",
-				"www.rememberthemilk.com",
-				"www.paypal*",
+			try {
 
-		};
+				final BufferedReader in = new BufferedReader(new FileReader(conf));
+				String buf;
+				while((buf = in.readLine()) != null){
+
+					hosts.add(buf);
+
+				}
+				in.close();
+
+			} catch (IOException e) {
+
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+
+			}
+
+		}else{
+
+			final Class<?> c = this.getClass();
+			try {
+
+				final BufferedReader in = new BufferedReader(new InputStreamReader(c.getResourceAsStream("res/hosts.default")));
+				final BufferedWriter out = new BufferedWriter(new FileWriter(conf));
+				String buf;
+				while((buf = in.readLine()) != null){
+
+					hosts.add(buf);
+					out.write(buf);
+					out.write("\n");
+
+				}
+
+				out.close();
+				in.close();
+
+			} catch (IOException e) {
+
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+
+			}
+
+		}
 
 		final StringBuilder regex = new StringBuilder();
 		regex.append("http://(");
 
 		int i = 0;
-		for(; i != hosts.length-1; ++i){
+		for(; i != hosts.size()-1; ++i){
 
-			regex.append(hosts[i].replace(".", "\\.").replace("*", "[^/]*").replace("(", "(?:"));
+			regex.append(hosts.get(i).replace(".", "\\.").replace("*", "[^/]*").replace("(", "(?:"));
 			regex.append("|");
 
 		}
-		regex.append(hosts[i].replace(".", "\\.").replace("*", "[^/]*").replace("(", "(?:"));
+		regex.append(hosts.get(i).replace(".", "\\.").replace("*", "[^/]*").replace("(", "(?:"));
 		regex.append(")(.*)");
 
 		this.urlRegex = regex.toString();
@@ -81,10 +126,17 @@ public class HttpsConnector extends Plugin{
 					public HttpResponse doRequest(final HttpRequest request, final MatchResult url) {
 
 						final String host = url.group(1);
-						final String path = url.group(2) != null ? url.group(2) : "";
+						final String path = url.group(2);
 
 						final HttpResponse res = request.createResponse(Status.Found);
-						res.getHeader().set(HeaderName.Location, String.format("https://%s%s", host, path));
+						if(path != null){
+
+							res.getHeader().set(HeaderName.Location, String.format("https://%s%s", host, path));
+
+						}else{
+
+							res.getHeader().set(HeaderName.Location, String.format("https://%s", host));
+						}
 
 						return res;
 
