@@ -1,4 +1,4 @@
-HttpsConnectorPlugin version 0.1
+HttpsConnectorPlugin
 =================================
 
 概要
@@ -6,31 +6,19 @@ HttpsConnectorPlugin version 0.1
 安全でない http プロトコルでの通信を自動的に https プロトコルへと切り替えます．
 現在対応しているドメインは次の通りです．（ * はワイルドカード）
 - www.facebook.com
-- *.google.com
+- www.google.com
 - twitter.com
 - www.evernote.com
 - www.dropbox.com
 - www.rememberthemilk.com
-- www.paypal.*
 
 https プロトコルを用いて接続要求を行っても，
 サーバ側がすべてのデータを https プロトコルを用いて送ってくるとは限らないことに注意してください．
 
 
-
-使い方
+コンパイル
 ---------------------------------
-ダウンロードした，HttpsConnectorPlugin.jar を plugin フォルダに追加してください．
+Maven2 を用いてこのプロジェクトをコンパイルするためには，
+次のプラグインが必要です．
+- serviceloader-maven-plugin: https://github.com/francisdb/serviceloader-maven-plugin
 
-
-ライセンス
----------------------------------------
-本ソフトウェアは、GNU 一般公衆利用許諾書(GNU GPL)バージョン 3 のもとで配布されています。
-
-このプログラムはフリーソフトウェアです．
-あなたはこれを，フリーソフトウェア財団によって発行されたGNU 一般公衆利用許諾書(バージョン3か、それ以降のバージョンのうちどれか)
-が定める条件の下で再頒布または改変することができます．
-
-このプログラムは有用であることを願って頒布されますが，全くの無保証です．
-商業可能性の保証や特定目的への適合性は，言外に示されたものも含め，全く存在しません．
-詳しくはGNU 一般公衆利用許諾書をご覧ください．
