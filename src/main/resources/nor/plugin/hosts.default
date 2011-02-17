@@ -3,21 +3,21 @@
 #======================================
 
 # このファイルを編集することで，
-# 自動で HTTPS 通信に切り替えるホストを追加することができます．
+# HTTPS 通信に切り替えるホストを追加することができます．
 #
 # 設定の記述は，
-#     <httpsプロトコルへ切り替えるホスト>=<httpsでのホスト名>
+#     <httpsプロトコルへ切り替えるURL>=<httpsでのURL>
 # という形式で記述します．
-# 例えば，以下の例では，
-#   http://www.facebook.com
+# 例えば，下記の一行目の例では，
+#   http://www.facebook.com/～
 # へのリクエストはすべて，
-#   https://ssl.facebook.com
+#   https://ssl.facebook.com/～
 # へリダイレクトされます．
 
 www.facebook.com=ssl.facebook.com
 twitter.com=twitter.com
 www.google.co.jp=www.google.co.jp
-www.google.com=encrypted.google.com
+www.google.com/search=encrypted.google.com/search
 www.rememberthemilk.com=www.rememberthemilk.com
 www.dropbox.com=www.dropbox.com
 www.evernote.com=www.evernote.com
