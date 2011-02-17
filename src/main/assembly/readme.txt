@@ -1,4 +1,4 @@
-HttpsConnectorPlugin version 0.2
+HttpsConnectorPlugin version 0.2.1
 =================================
 
 概要
@@ -17,8 +17,8 @@ HttpsConnectorPlugin version 0.2
 という形式で記述します．
 例えば，
     www.facebook.com=ssl.facebook.com
-という記述があった場合，http://www.facebook.com へのリクエストはすべて，
-https://ssl.facebook.com へリダイレクトされるようになります．
+という記述があった場合，http://www.facebook.com 以下へのリクエストはすべて，
+https://ssl.facebook.com 以下へリダイレクトされるようになります．
 
 https プロトコルを用いて接続要求を行っても，
 サーバ側がすべてのデータを https プロトコルを用いて送ってくるとは限らないことに注意してください．

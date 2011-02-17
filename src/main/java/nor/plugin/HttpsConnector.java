@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010 Junpei Kawamoto
+ *  Copyright (C) 2010, 2011 Junpei Kawamoto
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -47,6 +47,9 @@ public class HttpsConnector extends PluginAdapter{
 
 	private static final Logger LOGGER = Logger.getLogger(HttpsConnector.class);
 
+	//============================================================================
+	//  public methods
+	//============================================================================
 	@Override
 	public void init(final File common, final File local) throws IOException{
 		LOGGER.entering("init", common, local);
@@ -110,45 +113,51 @@ public class HttpsConnector extends PluginAdapter{
 
 	@Override
 	public MessageHandler[] messageHandlers() {
+		LOGGER.entering("messageHandlers");
 
-		if(this.urlRegex == null){
+		MessageHandler[] res = null;
 
-			return null;
+		if(this.urlRegex != null){
+
+			res = new MessageHandler[]{
+
+					new MessageHandlerAdapter(this.urlRegex){
+
+						@Override
+						public HttpResponse doRequest(final HttpRequest request, final MatchResult url) {
+							LOGGER.entering(this.getClass(), "doRequest", request, url);
+
+							final String host = url.group(1);
+							final String path = url.group(2);
+
+							final HttpResponse res = request.createResponse(Status.Found);
+							final String new_host = HttpsConnector.this.redirects.get(host);
+							if(path != null){
+
+								res.getHeader().set(HeaderName.Location, String.format("https://%s%s", new_host, path));
+
+							}else{
+
+								res.getHeader().set(HeaderName.Location, String.format("https://%s", new_host));
+							}
+
+							LOGGER.exiting(this.getClass(), "doRequest", res);
+							return res;
+						}
+
+					}
+
+			};
 
 		}
 
-		return new MessageHandler[]{
-
-				new MessageHandlerAdapter(HttpsConnector.this.urlRegex){
-
-					@Override
-					public HttpResponse doRequest(final HttpRequest request, final MatchResult url) {
-						LOGGER.entering(this.getClass(), "doRequest", request, url);
-
-						final String host = url.group(1);
-						final String path = url.group(2);
-
-						final HttpResponse res = request.createResponse(Status.Found);
-						if(path != null){
-
-							final String new_host = HttpsConnector.this.redirects.get(host);
-							res.getHeader().set(HeaderName.Location, String.format("https://%s%s", new_host, path));
-
-						}else{
-
-							res.getHeader().set(HeaderName.Location, String.format("https://%s", host));
-						}
-
-						LOGGER.exiting(this.getClass(), "doRequest", res);
-						return res;
-					}
-
-				}
-
-		};
-
+		LOGGER.exiting("messageHandlers", res);
+		return res;
 	}
 
+	//============================================================================
+	//  private methods
+	//============================================================================
 	private String toRegex(final String str){
 
 		return str.toString().replace(".", "\\.").replace("*", "[^/]*").replace("(", "(?:");
